@@ -20,6 +20,7 @@ function addTodo(event) {
   console.log("freshtodo", freshTodo);
   todoArray.todos.push(freshTodo);
   console.log("array", todoArray);
+  renderTodos();
 }
 
 FormContainers.forEach((container) =>
@@ -28,8 +29,9 @@ FormContainers.forEach((container) =>
   })
 );
 
-function updateTodos() {
-  return;
+function updateTodos(e) {
+  console.log(e.target);
+  e.target.done = !e.target.done;
 }
 
 function renderTodos() {
@@ -48,13 +50,11 @@ function renderTodos() {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.id = "todo-" + todo.id;
-    console.log("checkbox", checkbox.id);
     //
     // erstelle ein label für die checkbox
     const label = document.createElement("label");
     label.htmlFor = checkbox.id;
     label.innerText = todo.description;
-    console.log("label:", label.innerText);
 
     // füge den jeweiligen item ein listeneintrag ins markdown ein
     listItem.append(checkbox, label);
@@ -65,5 +65,5 @@ function renderTodos() {
   });
 }
 
-addButton.addEventListener("click", addTodo);
+todoField.addEventListener("change", updateTodos);
 addButton.addEventListener("click", renderTodos);
