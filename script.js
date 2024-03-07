@@ -53,7 +53,7 @@ function renderTodos() {
     label.htmlFor = checkbox.id;
     label.innerText = todo.description;
     console.log("label:", label.innerText);
-    todoField.append(checkbox, label);
+    listItem.append(checkbox, label);
     todoField.append(listItem);
   });
 }
