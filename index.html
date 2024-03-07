@@ -10,29 +10,35 @@
 
 <body>
     <main>
-        <form>
-            <input type="text">
-            <button class="add-button">add</button>
-        </form>
-        <form class="filter">
-            <h2>Filter & Options</h2>
-            <div>
-                <input type="checkbox" name="checkbox-all" id="checkbox-all">
-                <label for="checkbox-all">All</label>
-            </div>
-            <div>
-                <input type="checkbox" name="checkbox-open" id="checkbox-open">
-                <label for="checkbox-open">Open</label>
-            </div>
-            <div>
-                <input type="checkbox" name="checkbox-done" id="checkbox-done">
-                <label for="checkbox-done">Done</label>
-            </div>
-            <button class="remove-button">Remove Done Todos</button>
-        </form>
-        <section>
-            <h2>Your Todos</h2>
-        </section>
+        <div class="background-container"></div>
+        <div>
+            <form class="input-form">
+                <input type="text" id="add-input-field" placeholder="es gibt Arbeit!">
+                <button class="add-button">add</button>
+            </form>
+            <form class="filter">
+                <h2>Filter & Options</h2>
+                <div>
+                    <input type="checkbox" name="checkbox-all" id="checkbox-all">
+                    <label for="checkbox-all">All</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="checkbox-open" id="checkbox-open">
+                    <label for="checkbox-open">Open</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="checkbox-done" id="checkbox-done">
+                    <label for="checkbox-done">Done</label>
+                </div>
+                <button class="remove-button">Remove Done Todos</button>
+            </form>
+            <section>
+                <h2>Your Todos</h2>
+                <li class="todo-field">
+
+                </li>
+            </section>
+        </div>
     </main>
     <script src="script.js"></script>
 </body>
