@@ -5,18 +5,41 @@
 }
 
 main {
-  width: 300px;
+  position: relative;
+  width: 350px;
   margin: 200px auto;
-  background-color: rgb(196, 143, 64);
+  background-image: linear-gradient(
+      130deg,
+      rgba(34, 231, 238, 0.9),
+      rgb(243, 43, 143)
+    ),
+    linear-gradient(90deg, rgb(60, 197, 202), rgba(255, 0, 34, 0.836));
   border-radius: 10px;
+  color: transparent;
+  background-clip: text;
+  box-shadow: 4px 4px 4px dodgerblue;
 }
 
-main > * {
+main :nth-child(2) {
   margin-left: 50px;
 }
 
 input {
   margin-top: 20px;
+}
+h2 {
+  font-size: 30px;
+}
+
+.background-container {
+  background-color: salmon;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0%;
+  left: 0%;
+  z-index: -1;
+  border-radius: 10px;
 }
 
 .filter {
@@ -26,4 +49,13 @@ input {
 
 .remove-button {
   width: 200px;
+}
+
+.todo-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-field label {
+  border: 5px solid red;
 }
