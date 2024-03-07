@@ -12,12 +12,14 @@ let todoArray = {
 };
 
 function addTodo(event) {
-  //console.log(input.value);
-  todoArray.todos.push(input.value);
-  //console.log(todoArray);
-  localStorage.setItem("User", input.value);
-
-  test = localStorage.getItem("user");
+  const freshTodo = {
+    description: input.value,
+    id: todoArray.todos.length + 1,
+    done: false,
+  };
+  console.log("freshtodo", freshTodo);
+  todoArray.todos.push(freshTodo);
+  console.log("array", todoArray);
 }
 
 FormContainers.forEach((container) =>
@@ -53,8 +55,13 @@ function renderTodos() {
     label.htmlFor = checkbox.id;
     label.innerText = todo.description;
     console.log("label:", label.innerText);
+
+    // füge den jeweiligen item ein listeneintrag ins markdown ein
     listItem.append(checkbox, label);
     todoField.append(listItem);
+    if (todo.done === true) {
+      checkbox.checked = true;
+    }
   });
 }
 
