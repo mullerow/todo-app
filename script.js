@@ -1,47 +1,45 @@
 const input = document.querySelector("#add-input-field");
 const todoField = document.querySelector(".todo-field");
 const FormContainers = document.querySelectorAll("form");
-
 const addButton = document.querySelector(".add-button");
 
-let todoArray = {
-  todos: [
-    { description: "1. todo des Tages", id: 1, done: false },
-    { description: "2. todo des Tages", id: 2, done: true },
-  ],
-};
-
+const todos = [
+  { description: "1. todo des Tages", id: 1, done: false },
+  { description: "2. todo des Tages", id: 2, done: true },
+];
 function addTodo(event) {
   const freshTodo = {
     description: input.value,
-    id: todoArray.todos.length + 1,
+    id: todos.length + 1,
     done: false,
   };
-  console.log("freshtodo", freshTodo);
-  todoArray.todos.push(freshTodo);
-  console.log("array", todoArray);
+  todos.push(freshTodo);
+
+  const jsonTodo = JSON.stringify(todos);
+  localStorage.setItem("todoList", jsonTodo);
   renderTodos();
 }
 
-FormContainers.forEach((container) =>
-  container.addEventListener("submit", function (e) {
+FormContainers.forEach((form) =>
+  form.addEventListener("submit", function (e) {
     e.preventDefault();
   })
 );
 
 function updateTodos(e) {
-  console.log(e.target);
-  e.target.done = !e.target.done;
+  const targetId = parseInt(e.target.id.match(/\d+/)[0]);
+  const found = todos.find((item) => item.id === Number(targetId));
+  found.done = !found.done;
+  const jsonTodo = JSON.stringify(todos);
 }
 
 function renderTodos() {
   // zunächst sicherheitshalber den gesammten text löschen und erst dann neu  ebschreiben
-
   todoField.innerText = "";
-  console.log("render:", todoArray.todos[1].description);
+  console.log("render:", todos[1].description);
 
   // schleife durch alle Eintäge im der todo
-  todoArray.todos.forEach((todo) => {
+  todos.forEach((todo) => {
     //
     // estelle ein li element
     const listItem = document.createElement("li");
@@ -66,4 +64,6 @@ function renderTodos() {
 }
 
 todoField.addEventListener("change", updateTodos);
-addButton.addEventListener("click", renderTodos);
+addButton.addEventListener("click", addTodo);
+
+renderTodos();
