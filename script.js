@@ -3,8 +3,11 @@ const todoField = document.querySelector(".todo-field");
 const FormContainers = document.querySelectorAll("form");
 const addButton = document.querySelector(".add-button");
 const removeButton = document.querySelector(".remove-button");
-
+const radioAll = document.querySelector("#radio-all");
+const radioOpen = document.querySelector("#radio-open");
+const radioDone = document.querySelector("#radio-done");
 let todos = [];
+
 function addTodo(event) {
   let duplicate = false;
   // wenn das das array durch JSON auf null gesetzt wurde, dann ändere bitte todos in array
@@ -16,7 +19,9 @@ function addTodo(event) {
     return;
   }
   // suche nach duplikaten
-  duplicate = todos.some((todo) => todo.description === input.value);
+  duplicate = todos.some(
+    (todo) => todo.description.toLowerCase() === input.value.toLowerCase()
+  );
 
   // wenn ein duplikat gefunden wurde, breche das hinzufügen eines todos ab
   if (duplicate === true) {
