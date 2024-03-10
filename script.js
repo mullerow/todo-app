@@ -2,11 +2,9 @@ const input = document.querySelector("#add-input-field");
 const todoField = document.querySelector(".todo-field");
 const FormContainers = document.querySelectorAll("form");
 const addButton = document.querySelector(".add-button");
+const removeButton = document.querySelector(".remove-button");
 
-let todos = [
-  { description: "1. todo des Tages", id: 1, done: false },
-  { description: "2. todo des Tages", id: 2, done: true },
-];
+let todos = [];
 function addTodo(event) {
   let duplicate = false;
   // wenn das das array durch JSON auf null gesetzt wurde, dann ändere bitte todos in array
@@ -77,7 +75,20 @@ function renderTodos() {
   }
 }
 
+function deleteDoneTodos() {
+  for (let i = todos.length - 1; i >= 0; i--) {
+    if (todos[i].done === true) {
+      todos.splice(i, 1);
+    }
+  }
+  // die änderungen an der todos abspeichern und anschließend neu rendern!
+  const storageList = JSON.stringify(todos);
+  localStorage.setItem("todoList", storageList);
+  renderTodos();
+}
+
 todoField.addEventListener("change", updateTodos);
 addButton.addEventListener("click", addTodo);
+removeButton.addEventListener("click", deleteDoneTodos);
 
 renderTodos();
