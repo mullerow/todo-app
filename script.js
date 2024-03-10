@@ -6,12 +6,21 @@ const removeButton = document.querySelector(".remove-button");
 const radioAll = document.querySelector("#radio-all");
 const radioOpen = document.querySelector("#radio-open");
 const radioDone = document.querySelector("#radio-done");
+const filter = document.querySelector(".filter");
 let todos = [];
+
+FormContainers.forEach((form) =>
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+  })
+);
 
 function addTodo(event) {
   let duplicate = false;
-  // wenn das das array durch JSON auf null gesetzt wurde, dann ändere bitte todos in array
-  if (todos === null) {
+  let freshTodo;
+  let generatedId = 0;
+  let idList = [];
+  if (!todos || todos === null) {
     todos = [];
   }
   // ausschließen das ein leerer string als todo übergeben wird
@@ -20,23 +29,36 @@ function addTodo(event) {
   }
   // suche nach duplikaten
   duplicate = todos.some(
-    (todo) => todo.description.toLowerCase() === input.value.toLowerCase()
+    (todo) =>
+      todo &&
+      todo.description &&
+      todo.description.toLowerCase() === input.value.toLowerCase()
   );
 
   // wenn ein duplikat gefunden wurde, breche das hinzufügen eines todos ab
   if (duplicate === true) {
     return;
   } else {
-    const freshTodo = {
+    // erstelle eine Liste mit allen vorhandenen id der todos
+    for (let todo of todos) {
+      idList.push(todo.id);
+    }
+    // definieren der ID. notwendig da beim löschen von todos die ids neuer todos sich sonst doppeln können
+    if (todos.length === 0) {
+      generatedId = 1;
+    } else {
+      generatedId = Math.max(...idList) + 1;
+    }
+    freshTodo = {
       description: input.value,
-      id: todos.length + 1,
+      id: generatedId,
       done: false,
     };
-    todos.push(freshTodo);
-    const storageList = JSON.stringify(todos);
-    localStorage.setItem("todoList", storageList);
-    renderTodos();
   }
+  todos.push(freshTodo);
+  const storageList = JSON.stringify(todos);
+  localStorage.setItem("todoList", storageList);
+  renderTodos();
 }
 
 FormContainers.forEach((form) =>
@@ -52,6 +74,7 @@ function updateTodos(e) {
 function renderTodos() {
   const todosJson = localStorage.getItem("todoList");
   todos = JSON.parse(todosJson);
+
   // zunächst sicherheitshalber den gesammten text löschen und erst dann neu beschreiben
   todoField.innerText = "";
   // schleife durch alle Eintäge im der todo
@@ -81,18 +104,48 @@ function renderTodos() {
 }
 
 function deleteDoneTodos() {
+  console.log("before storage", todos);
   for (let i = todos.length - 1; i >= 0; i--) {
     if (todos[i].done === true) {
       todos.splice(i, 1);
     }
   }
   // die änderungen an der todos abspeichern und anschließend neu rendern!
+
   const storageList = JSON.stringify(todos);
   localStorage.setItem("todoList", storageList);
   renderTodos();
 }
 
+function filterTodos(e) {
+  /*
+  const todoListItems = document.querySelectorAll("li");
+  console.log("todoListItems", todoListItems);
+//
+  todoListItems.forEach(function (item) {
+    const id = item.firstChild.id;
+    console.log("id", id);
+  });
+
+  if (e.target.id === "radio-all") {
+    renderTodos();
+  } else if (e.target.id === "radio-done") {
+    for (let todo in todos) {
+      if (todo.done === true) {
+       let liElementID = 
+      }
+    }
+  }
+}
+*/
+
+  const todosJson = localStorage.getItem("todoList");
+  todos = JSON.parse(todosJson);
+  console.log("todos", todos);
+}
+
 todoField.addEventListener("change", updateTodos);
+filter.addEventListener("change", filterTodos);
 addButton.addEventListener("click", addTodo);
 removeButton.addEventListener("click", deleteDoneTodos);
 
