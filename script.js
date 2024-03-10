@@ -18,10 +18,8 @@ function addTodo(event) {
     return;
   }
   // suche nach duplikaten
-  todos.forEach((todo) => {
-    duplicate = todo.description.includes(input.value);
-    console.log("duplicate", duplicate);
-  });
+  duplicate = todos.some((todo) => todo.description === input.value);
+
   // wenn ein duplikat gefunden wurde, breche das hinzufügen eines todos ab
   if (duplicate === true) {
     return;
