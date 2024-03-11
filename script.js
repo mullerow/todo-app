@@ -122,6 +122,11 @@ function filterTodos(e) {
   console.log("todoListItems", todoListItems);
   //
   if (e.target.id === "radio-all") {
+    todoListItems.forEach(function (item) {
+      const elementId = item.firstChild.id;
+      let filteredId = Number(elementId.match(/\d+/)[0]);
+      for (let todo of todos) item.classList.remove("hide-me");
+    });
   }
 
   /// verstecken aller todos welche nicht erledigt sind
