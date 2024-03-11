@@ -125,7 +125,11 @@ function filterTodos(e) {
     todoListItems.forEach(function (item) {
       const elementId = item.firstChild.id;
       let filteredId = Number(elementId.match(/\d+/)[0]);
-      for (let todo of todos) item.classList.remove("hide-me");
+      for (let todo of todos) {
+        if (todo.id === filteredId) {
+          item.classList.remove("hide-me");
+        }
+      }
     });
   }
 
@@ -142,10 +146,7 @@ function filterTodos(e) {
         }
       }
     });
-  }
-
-  /// anzeigen aller todos, welche noch zu machen sind
-  else if (e.target.id === "radio-open") {
+  } else if (e.target.id === "radio-open") {
     todoListItems.forEach(function (item) {
       const elementId = item.firstChild.id;
       let filteredId = Number(elementId.match(/\d+/)[0]);
@@ -161,26 +162,8 @@ function filterTodos(e) {
       }
     });
   }
-
-  /////////////////////////////////////////////////////
-  /*
-  todoListItems.forEach(function (item) {
-    const elementId = item.firstChild.id;
-    let filteredId = Number(elementId.match(/\d+/)[0]);
-    for (let todo of todos) {
-      console.log("todo", todo);
-      console.log("filteredId", filteredId, "todo.id", todo.id);
-      if (todo.id === filteredId) {
-        console.log("hab dich");
-        item.classList.add("hide-me");
-      }
-    }
-  });
-  */
-  ////////////////////////////////////////////////////////////
-
-  const todosJson = localStorage.getItem("todoList");
-  todos = JSON.parse(todosJson);
+  const storageList = JSON.stringify(todos);
+  localStorage.setItem("todoList", storageList);
 }
 
 todoField.addEventListener("change", updateTodos);
