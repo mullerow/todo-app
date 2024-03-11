@@ -74,7 +74,6 @@ function updateTodos(e) {
 function renderTodos() {
   const todosJson = localStorage.getItem("todoList");
   todos = JSON.parse(todosJson);
-
   // zunächst sicherheitshalber den gesammten text löschen und erst dann neu beschreiben
   todoField.innerText = "";
   // schleife durch alle Eintäge im der todo
@@ -118,30 +117,65 @@ function deleteDoneTodos() {
 }
 
 function filterTodos(e) {
-  /*
+  console.log("todos", todos);
   const todoListItems = document.querySelectorAll("li");
   console.log("todoListItems", todoListItems);
-//
-  todoListItems.forEach(function (item) {
-    const id = item.firstChild.id;
-    console.log("id", id);
-  });
-
+  //
   if (e.target.id === "radio-all") {
-    renderTodos();
-  } else if (e.target.id === "radio-done") {
-    for (let todo in todos) {
-      if (todo.done === true) {
-       let liElementID = 
+  }
+
+  /// verstecken aller todos welche nicht erledigt sind
+  else if (e.target.id === "radio-done") {
+    todoListItems.forEach(function (item) {
+      const elementId = item.firstChild.id;
+      let filteredId = Number(elementId.match(/\d+/)[0]);
+      for (let todo of todos) {
+        if (todo.id === filteredId && todo.done === false) {
+          item.classList.add("hide-me");
+        } else if (todo.id === filteredId && todo.done === true) {
+          item.classList.remove("hide-me");
+        }
+      }
+    });
+  }
+
+  /// anzeigen aller todos, welche noch zu machen sind
+  else if (e.target.id === "radio-open") {
+    todoListItems.forEach(function (item) {
+      const elementId = item.firstChild.id;
+      let filteredId = Number(elementId.match(/\d+/)[0]);
+      for (let todo of todos) {
+        if (todo.id === filteredId) {
+          if (todo.done === false) {
+            console.log("hab dich");
+            item.classList.remove("hide-me");
+          } else {
+            item.classList.add("hide-me");
+          }
+        }
+      }
+    });
+  }
+
+  /////////////////////////////////////////////////////
+  /*
+  todoListItems.forEach(function (item) {
+    const elementId = item.firstChild.id;
+    let filteredId = Number(elementId.match(/\d+/)[0]);
+    for (let todo of todos) {
+      console.log("todo", todo);
+      console.log("filteredId", filteredId, "todo.id", todo.id);
+      if (todo.id === filteredId) {
+        console.log("hab dich");
+        item.classList.add("hide-me");
       }
     }
-  }
-}
-*/
+  });
+  */
+  ////////////////////////////////////////////////////////////
 
   const todosJson = localStorage.getItem("todoList");
   todos = JSON.parse(todosJson);
-  console.log("todos", todos);
 }
 
 todoField.addEventListener("change", updateTodos);

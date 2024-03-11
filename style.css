@@ -10,7 +10,7 @@ html {
 
 main {
   position: relative;
-  width: 350px;
+  width: 550px;
   margin: 200px auto;
   background-image: linear-gradient(
     120deg,
@@ -30,6 +30,7 @@ main > :nth-child(2) {
 
 input {
   margin-top: 20px;
+  width: 400px;
 }
 
 h2 {
@@ -96,6 +97,19 @@ ul li {
 
 .remove-button {
   margin-top: 20px;
+  background-image: linear-gradient(
+    120deg,
+    rgba(9, 173, 160, 0.7) 30%,
+    rgba(116, 40, 238, 0.5),
+    rgb(243, 43, 183, 0.5) 90%
+  );
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px rgba(9, 173, 160, 0.7);
+}
+
+.add-button {
+  width: 80px;
+  margin-left: 15px;
   background-image: linear-gradient(
     120deg,
     rgba(9, 173, 160, 0.7) 30%,
