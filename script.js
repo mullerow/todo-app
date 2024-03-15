@@ -28,6 +28,7 @@ function addTodo(event) {
     return;
   }
   // suche nach duplikaten
+  console.log("todos vor some", todos);
   duplicate = todos.some(
     (todo) =>
       todo &&
@@ -55,9 +56,12 @@ function addTodo(event) {
       done: false,
     };
   }
-  todos.push(freshTodo);
-  const storageList = JSON.stringify(todos);
-  localStorage.setItem("todoList", storageList);
+  /// todos.push(freshTodo);
+  // const storageList = JSON.stringify(todos);
+  // localStorage.setItem("todoList", storageList);
+
+  saveAPITodos(freshTodo);
+
   renderTodos();
 }
 
@@ -71,9 +75,11 @@ function updateTodos(e) {
   e.target.todoObj.done = !e.target.todoObj.done;
 }
 
-function renderTodos() {
-  const todosJson = localStorage.getItem("todoList");
-  todos = JSON.parse(todosJson);
+async function renderTodos() {
+  await getAPITodos();
+
+  //const todosJson = localStorage.getItem("todoList");
+  //todos = JSON.parse(todosJson) || [];
   // zunächst sicherheitshalber den gesammten text löschen und erst dann neu beschreiben
   todoField.innerText = "";
   // schleife durch alle Eintäge im der todo
@@ -106,9 +112,12 @@ function deleteDoneTodos() {
   console.log("before storage", todos);
   for (let i = todos.length - 1; i >= 0; i--) {
     if (todos[i].done === true) {
-      todos.splice(i, 1);
+      doneTodo = todos[i].id;
+      deleteAPITodos(doneTodo);
+      //todos.splice(i, 1);
     }
   }
+
   // die änderungen an der todos abspeichern und anschließend neu rendern!
 
   const storageList = JSON.stringify(todos);
@@ -153,7 +162,6 @@ function filterTodos(e) {
       for (let todo of todos) {
         if (todo.id === filteredId) {
           if (todo.done === false) {
-            console.log("hab dich");
             item.classList.remove("hide-me");
           } else {
             item.classList.add("hide-me");
@@ -162,8 +170,59 @@ function filterTodos(e) {
       }
     });
   }
-  const storageList = JSON.stringify(todos);
-  localStorage.setItem("todoList", storageList);
+
+  // const storageList = JSON.stringify(todos);
+  // localStorage.setItem("todoList", storageList);
+
+  ///// saveAPITodos();
+}
+
+//////  funktionen für backend API  ///////////////////////////////////////////////
+
+const testArrayFetch = {
+  description: "hobbies suchen außerhalb des Bildschirms",
+  done: false,
+};
+
+const apiUrl = "http://localhost:4730/todos/";
+
+async function saveAPITodos(freshTodo) {
+  console.log("freshtodoID", freshTodo.id);
+  try {
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(freshTodo),
+    });
+    if (response.ok) {
+      const todoData = await response.json();
+      console.log("tododData", todoData);
+    }
+  } catch (error) {
+    console.error("error", error);
+  }
+}
+
+async function getAPITodos() {
+  const response = await fetch(apiUrl);
+  if (response.ok) {
+    const todoData = await response.json();
+    todos = todoData;
+    console.log(todoData);
+    return todos;
+  }
+}
+
+async function deleteAPITodos(doneTodo) {
+  const response = await fetch(apiUrl + doneTodo.id, {
+    method: "DELETE",
+  });
+  if (response.ok) {
+    const todoData = await response.json();
+    todos = todoData;
+    console.log("nach löschung", todoData);
+    return todos;
+  }
 }
 
 todoField.addEventListener("change", updateTodos);
