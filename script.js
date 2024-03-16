@@ -73,6 +73,10 @@ FormContainers.forEach((form) =>
 
 function updateTodos(e) {
   e.target.todoObj.done = !e.target.todoObj.done;
+  console.log("freshTodo", e.target.todoObj);
+  freshTodo = e.target.todoObj;
+  updateAPITodos(freshTodo);
+  // der done status wird hier zwar lokal geändert, aber nicht auf der api. sodass bei rendern der api status geladen wird und der lokale vergessen
 }
 
 async function renderTodos() {
@@ -109,13 +113,14 @@ async function renderTodos() {
 }
 
 function deleteDoneTodos() {
-  console.log("before storage", todos);
   for (let i = todos.length - 1; i >= 0; i--) {
     if (todos[i].done === true) {
       doneTodo = todos[i].id;
+      console.log("doneTodo", doneTodo);
       deleteAPITodos(doneTodo);
       //todos.splice(i, 1);
     }
+    return todos;
   }
 
   // die änderungen an der todos abspeichern und anschließend neu rendern!
@@ -179,11 +184,6 @@ function filterTodos(e) {
 
 //////  funktionen für backend API  ///////////////////////////////////////////////
 
-const testArrayFetch = {
-  description: "hobbies suchen außerhalb des Bildschirms",
-  done: false,
-};
-
 const apiUrl = "http://localhost:4730/todos/";
 
 async function saveAPITodos(freshTodo) {
@@ -211,6 +211,14 @@ async function getAPITodos() {
     console.log(todoData);
     return todos;
   }
+}
+
+async function updateAPITodos(doneTodo) {
+  const response = await fetch(apiUrl + doneTodo.id, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(freshTodo),
+  });
 }
 
 async function deleteAPITodos(doneTodo) {
