@@ -7,7 +7,6 @@ const radioAll = document.querySelector("#radio-all");
 const radioOpen = document.querySelector("#radio-open");
 const radioDone = document.querySelector("#radio-done");
 const filter = document.querySelector(".filter");
-let todos = [];
 
 FormContainers.forEach((form) =>
   form.addEventListener("submit", function (e) {
@@ -15,14 +14,11 @@ FormContainers.forEach((form) =>
   })
 );
 
-async function addTodo(event) {
+async function addTodo() {
   let duplicate = false;
   let freshTodo;
   let generatedId = 0;
   let idList = [];
-  if (!todos || todos === null) {
-    todos = [];
-  }
   // ausschließen das ein leerer string als todo übergeben wird
   if (input.value.trim() === "") {
     return;
@@ -55,9 +51,6 @@ async function addTodo(event) {
       done: false,
     };
   }
-  /// todos.push(freshTodo);
-  // const storageList = JSON.stringify(todos);
-  // localStorage.setItem("todoList", storageList);
 
   await saveAPITodos(freshTodo);
 
@@ -78,34 +71,28 @@ function updateTodos(e) {
 
 async function renderTodos() {
   await getAPITodos();
-  console.log("render getAPI", todos);
-
   // zunächst sicherheitshalber den gesammten text löschen und erst dann neu beschreiben
   todoField.innerText = "";
   // schleife durch alle Eintäge im der todo
-  if (todos !== null && todos.length > 0) {
-    todos.forEach((todo) => {
-      // erstelle ein li element
-      const listItem = document.createElement("li");
-      // erstelle eine checkbox
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.id = "todo-" + todo.id;
-      // erstelle ein label für die checkbox
-      const label = document.createElement("label");
-      label.htmlFor = checkbox.id;
-      label.innerText = todo.description;
-      // füge den jeweiligen item ein listeneintrag ins markdown ein
-      listItem.append(checkbox, label);
-      todoField.append(listItem);
-      checkbox.todoObj = todo;
-      if (todo.done === true) {
-        checkbox.checked = true;
-      }
-    });
-  } else {
-    return;
-  }
+  todos.forEach((todo) => {
+    // erstelle ein li element
+    const listItem = document.createElement("li");
+    // erstelle eine checkbox
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = "todo-" + todo.id;
+    // erstelle ein label für die checkbox
+    const label = document.createElement("label");
+    label.htmlFor = checkbox.id;
+    label.innerText = todo.description;
+    // füge den jeweiligen item ein listeneintrag ins markdown ein
+    listItem.append(checkbox, label);
+    todoField.append(listItem);
+    checkbox.todoObj = todo;
+    if (todo.done === true) {
+      checkbox.checked = true;
+    }
+  });
 }
 
 function deleteDoneTodos() {
@@ -120,9 +107,7 @@ function deleteDoneTodos() {
 }
 
 function filterTodos(e) {
-  console.log("todos", todos);
   const todoListItems = document.querySelectorAll("li");
-  console.log("todoListItems", todoListItems);
   //
   if (e.target.id === "radio-all") {
     todoListItems.forEach(function (item) {
@@ -164,29 +149,19 @@ function filterTodos(e) {
       }
     });
   }
-
-  // const storageList = JSON.stringify(todos);
-  // localStorage.setItem("todoList", storageList);
-
-  ///// saveAPITodos();
 }
 
-//////  funktionen für backend API  ///////////////////////////////////////////////
+//////  funktionen für die backend API  ///////////////////////////////////////////////
 
 const apiUrl = "http://localhost:4730/todos/";
 
 async function saveAPITodos(freshTodo) {
-  console.log("freshtodoID", freshTodo.id);
   try {
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(freshTodo),
     });
-    if (response.ok) {
-      const todoData = await response.json();
-      console.log("tododData", todoData);
-    }
   } catch (error) {
     console.error("error", error);
   }
@@ -197,7 +172,6 @@ async function getAPITodos() {
   if (response.ok) {
     const todoData = await response.json();
     todos = todoData;
-    console.log(todoData);
     return todos;
   }
 }
@@ -211,13 +185,11 @@ async function updateAPITodos(doneTodo) {
 }
 
 async function deleteAPITodos(doneTodoId) {
-  console.log("bei löschung", doneTodoId);
   const response = await fetch(apiUrl + doneTodoId, {
     method: "DELETE",
   });
   if (response.ok) {
     const todoData = await response.json();
-    console.log("nach löschung", todoData);
     renderTodos();
   }
 }
